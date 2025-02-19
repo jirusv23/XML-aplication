@@ -53,6 +53,6 @@
         <Button Name="C" Content="C" Grid.Column="2" Grid.Row="1" FontSize="24" Margin="2,2,2,2"/>
         <Button Name="Smazat" Content="⌫" Grid.Column="3" Grid.Row="1" FontSize="24" Margin="2,2,2,2"/>
 
-        <Button Name="Label" Content="" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" FontSize="24" Margin="2,2,2,2"/>
+        <Button Name="Label" Content="S" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" FontSize="24" Margin="2,2,2,2" Click="Label_Click"/>
     </Grid>
 </Window>
