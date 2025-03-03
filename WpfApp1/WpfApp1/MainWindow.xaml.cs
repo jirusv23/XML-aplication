@@ -44,15 +44,63 @@ namespace WpfApp1
             Deleno.Click += (sender, e) => DelenoOnClick(); // Divide
             RovnaSe.Click += (sender, e) => CalculateResult();
             CE.Click += (sender, e) => ClearAll();
-            Smazat.Click += (sender, e) => deleteChar();
-            Procento.Click += (sender, e) => procentoOnlcik();
+            Smazat.Click += (sender, e) => DeleteChar();
+            Procento.Click += (sender, e) => ProcentoOnClick();
+            Odmocnina.Click += (sender, e) => OdmocninaOperace();
+            naDruhou.Click += (sender, e) => naDruhouOperace();
+            naMinusPrvou.Click += (sender, e) => naMinusPrvouOperace();
+            C.Click += (sender, e) => clearAddedValue();
+
         }
 
+        private void OdmocninaOperace()
+        {
+            float result = (float)Math.Sqrt(cislo);
+            displayValue = result.ToString();
+            cislo = result;
 
+            Label.Content = displayValue;
+        }
+
+        private void naDruhouOperace()
+        {
+            float result = cislo * cislo;
+            displayValue = result.ToString();
+            cislo = result;
+
+            Label.Content = displayValue;
+        }
+
+        private void naMinusPrvouOperace()
+        {
+            float result = 1 / cislo;
+            displayValue = result.ToString();
+            cislo = result;
+
+            Label.Content = displayValue;
+        }
+
+        private void SetOperation(string operation)
+        {
+            scitani = operation == "scitani";
+            odcitani = operation == "odcitani";
+            nasobeni = operation == "nasobeni";
+            deleni = operation == "deleni";
+            procentro = operation == "procentro";
+        }
+
+        private void clearAddedValue()
+        {
+            if (scitani || odcitani || nasobeni || deleni || procentro)
+            {
+                pridavanaHodnota = "";
+                Label.Content = pridavanaHodnota;
+            }
+        }
 
         private void AppendNumber(string numberString)
         {
-            if (scitani || odcitani || nasobeni || deleni)
+            if (scitani || odcitani || nasobeni || deleni || procentro)
             {
                 pridavanaHodnota += numberString;
 
@@ -76,7 +124,7 @@ namespace WpfApp1
 
         private void NegateValue()
         {
-            if (scitani || odcitani || nasobeni || deleni)
+            if (scitani || odcitani || nasobeni || deleni || procentro)
             {
                 if (!string.IsNullOrEmpty(pridavanaHodnota))
                 {
@@ -115,7 +163,7 @@ namespace WpfApp1
 
         private void CarkaOnClick()
         {
-            if (scitani || odcitani || nasobeni || deleni)
+            if (scitani || odcitani || nasobeni || deleni || procentro)
             {
                 if (!pridavanaHodnota.Contains("."))
                 {
@@ -147,78 +195,58 @@ namespace WpfApp1
             }
         }
 
-        private void procentoOnlcik()
+        private void ProcentoOnClick()
         {
-            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni))
+            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni || procentro))
             {
                 CalculateResult();
             }
 
-            scitani = false;
-            odcitani = false;
-            nasobeni = false;
-            deleni = false;
-            procentro = true;
+            SetOperation("procentro");
             pridavanaHodnota = "";
         }
 
         private void PlusOnClick()
         {
-            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni))
+            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni || procentro))
             {
                 CalculateResult();
             }
 
-            scitani = true;
-            odcitani = false;
-            nasobeni = false;
-            deleni = false;
-            procentro = false;
+            SetOperation("scitani");
             pridavanaHodnota = "";
         }
 
         private void MinusOnClick()
         {
-            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni))
+            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni || procentro))
             {
                 CalculateResult();
             }
 
-            odcitani = true;
-            scitani = false;
-            nasobeni = false;
-            deleni = false;
-            procentro = false;
+            SetOperation("odcitani");
             pridavanaHodnota = "";
         }
 
         private void KratOnClick()
         {
-            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni))
+            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni || procentro))
             {
                 CalculateResult();
             }
 
-            nasobeni = true;
-            scitani = false;
-            odcitani = false;
-            deleni = false;
-            procentro = false;
+            SetOperation("nasobeni");
             pridavanaHodnota = "";
         }
 
         private void DelenoOnClick()
         {
-            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni))
+            if (!string.IsNullOrEmpty(pridavanaHodnota) && (scitani || odcitani || nasobeni || deleni || procentro))
             {
                 CalculateResult();
             }
 
-            deleni = true;
-            scitani = false;
-            odcitani = false;
-            nasobeni = false;
-            procentro = false;
+            SetOperation("deleni");
             pridavanaHodnota = "";
         }
 
@@ -228,17 +256,11 @@ namespace WpfApp1
             {
                 if (scitani)
                 {
-                    if (!procentro)
-                        cislo += secondOperand;
-                    else if (procentro)
-                        cislo = cislo * (secondOperand / 100);
+                    cislo += secondOperand;
                 }
                 else if (odcitani)
                 {
-                    if (!procentro)
-                        cislo -= secondOperand;
-                    else if (procentro)
-                        cislo = cislo * (secondOperand / 100);
+                    cislo -= secondOperand;
                 }
                 else if (nasobeni)
                 {
@@ -256,16 +278,16 @@ namespace WpfApp1
                         return;
                     }
                 }
+                else if (procentro)
+                {
+                    cislo = cislo * (secondOperand / 100);
+                }
 
                 displayValue = cislo.ToString();
                 Label.Content = displayValue;
 
                 pridavanaHodnota = "";
-                scitani = false;
-                odcitani = false;
-                nasobeni = false;
-                deleni = false;
-                procentro = false;
+                SetOperation("");
             }
         }
 
@@ -274,17 +296,13 @@ namespace WpfApp1
             cislo = 0;
             displayValue = "";
             pridavanaHodnota = "";
-            scitani = false;
-            odcitani = false;
-            nasobeni = false;
-            deleni = false;
-            procentro = false;
-            Label.Content = "";
+            SetOperation("");
+            Label.Content = "0";
         }
 
-        private void deleteChar()
+        private void DeleteChar()
         {
-            if (scitani || odcitani || nasobeni || deleni)
+            if (scitani || odcitani || nasobeni || deleni || procentro)
             {
                 if (!string.IsNullOrEmpty(pridavanaHodnota))
                 {
